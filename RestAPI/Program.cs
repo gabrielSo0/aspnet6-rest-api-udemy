@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using RestAPI.Model.Context;
 using RestAPI.Services;
 using RestAPI.Services.Implementations;
 
@@ -12,6 +14,9 @@ namespace RestAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            var connection = builder.Configuration.GetConnectionString("ConnectionStrings:MySQLConnectionString");
+            builder.Services.AddDbContext<MySQLContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
 
             builder.Services.AddScoped<IPersonService, PersonService>();
 
