@@ -1,3 +1,6 @@
+using RestAPI.Services;
+using RestAPI.Services.Implementations;
+
 namespace RestAPI
 {
     public class Program
@@ -9,6 +12,8 @@ namespace RestAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+
+            builder.Services.AddScoped<IPersonService, PersonService>();
 
             var app = builder.Build();
 
