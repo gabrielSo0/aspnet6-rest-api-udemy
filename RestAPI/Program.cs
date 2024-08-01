@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RestAPI.Model.Context;
+using RestAPI.Repository;
+using RestAPI.Repository.Interfaces;
 using RestAPI.Services;
 using RestAPI.Services.Implementations;
 
@@ -21,6 +23,7 @@ namespace RestAPI
             builder.Services.AddApiVersioning();
 
             builder.Services.AddScoped<IPersonService, PersonService>();
+            builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
             var app = builder.Build();
 
