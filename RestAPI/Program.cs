@@ -18,6 +18,8 @@ namespace RestAPI
             var connection = builder.Configuration.GetConnectionString("MySQLConnectionString");
             builder.Services.AddDbContext<MySQLContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
 
+            builder.Services.AddApiVersioning();
+
             builder.Services.AddScoped<IPersonService, PersonService>();
 
             var app = builder.Build();
