@@ -13,7 +13,7 @@ namespace RestAPI.Model
         public string LastName { get; set; }
         [Column("address")]
         public string Address { get; set; }
-        [Column("genre")]
-        public string Genre { get; set; }
+        [Column("gender")]
+        public string Gender { get; set; }
     }
 }
