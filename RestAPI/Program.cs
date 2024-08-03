@@ -1,9 +1,12 @@
+using EvolveDb;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using RestAPI.Model.Context;
 using RestAPI.Repository;
 using RestAPI.Repository.Interfaces;
 using RestAPI.Services;
 using RestAPI.Services.Implementations;
+using Serilog;
 
 namespace RestAPI
 {
@@ -19,6 +22,11 @@ namespace RestAPI
 
             var connection = builder.Configuration.GetConnectionString("MySQLConnectionString");
             builder.Services.AddDbContext<MySQLContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
+
+            if(builder.Environment.IsDevelopment())
+            {
+                MigrateDatabase(connection);
+            }
 
             builder.Services.AddApiVersioning();
 
@@ -37,6 +45,26 @@ namespace RestAPI
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void MigrateDatabase(string connection)
+        {
+            try
+            {
+                var evolveConnection = new MySqlConnection(connection);
+                var evolve = new Evolve(evolveConnection, Log.Information)
+                {
+                    Locations = new List<string> { "db/migrations", "db/dataset" },
+                    IsEraseDisabled = true
+                };
+
+                evolve.Migrate();
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Database migration failed", ex);
+                throw;
+            }
         }
     }
 }
