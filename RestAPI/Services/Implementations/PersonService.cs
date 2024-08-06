@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using RestAPI.Model;
 using RestAPI.Model.Context;
-using RestAPI.Repository.Interfaces;
+using RestAPI.Repository.Generic;
 
 namespace RestAPI.Services.Implementations
 {
     public class PersonService : IPersonService
     {
-        private readonly IPersonRepository _repository;
-        public PersonService(IPersonRepository repository)
+        private readonly IRepository<Person> _repository;
+        public PersonService(IRepository<Person> repository)
         {
             _repository = repository;
         }

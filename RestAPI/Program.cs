@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using RestAPI.Model.Context;
 using RestAPI.Repository;
-using RestAPI.Repository.Interfaces;
+using RestAPI.Repository.Generic;
 using RestAPI.Services;
 using RestAPI.Services.Implementations;
 using Serilog;
@@ -32,8 +32,7 @@ namespace RestAPI
 
             builder.Services.AddScoped<IPersonService, PersonService>();
             builder.Services.AddScoped<IBookService, BookService>();
-            builder.Services.AddScoped<IPersonRepository, PersonRepository>();
-            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
             var app = builder.Build();
 
