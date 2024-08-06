@@ -31,7 +31,9 @@ namespace RestAPI
             builder.Services.AddApiVersioning();
 
             builder.Services.AddScoped<IPersonService, PersonService>();
+            builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
 
             var app = builder.Build();
 

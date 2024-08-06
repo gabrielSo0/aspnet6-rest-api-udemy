@@ -20,7 +20,7 @@ namespace RestAPI.Repository
 
         public Book FindById(long id)
         {
-            return _context.Books.SingleOrDefault(b => b.Equals(id));
+            return _context.Books.SingleOrDefault(b => b.Id.Equals(id));
         }
 
         public Book Create(Book book)
@@ -41,9 +41,9 @@ namespace RestAPI.Repository
 
         public Book Update(Book book)
         {
-            if (Exists(book.Id)) return null;
+            if (!Exists(book.Id)) return null;
 
-            var result = _context.Books.SingleOrDefault(b => b.Equals(book.Id));
+            var result = _context.Books.SingleOrDefault(b => b.Id.Equals(book.Id));
 
             if(result != null)
             {
@@ -64,7 +64,7 @@ namespace RestAPI.Repository
 
         public void Delete(long id)
         {
-            var result = _context.Books.SingleOrDefault(b => b.Equals(id));
+            var result = _context.Books.SingleOrDefault(b => b.Id.Equals(id));
 
             if(result != null)
             {
@@ -75,7 +75,7 @@ namespace RestAPI.Repository
 
         public bool Exists(long id)
         {
-            return _context.Books.Any(b => b.Equals(id));
+            return _context.Books.Any(b => b.Id.Equals(id));
         }
     }
 }

@@ -21,14 +21,14 @@ namespace RestAPI.Services.Implementations
             return _bookRepository.FindById(id);
         }
 
-        public Book Create(Book person)
+        public Book Create(Book book)
         {
-            return _bookRepository.Create(person);
+            return _bookRepository.Create(book);
         }
 
-        public Book Update(Book person)
+        public Book Update(Book book)
         {
-            return _bookRepository.Update(person);
+            return _bookRepository.Update(book);
         }
 
         public void Delete(long id)

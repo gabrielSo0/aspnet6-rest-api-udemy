@@ -4,10 +4,10 @@ namespace RestAPI.Services
 {
     public interface IBookService
     {
-        Book Create(Book person);
+        Book Create(Book book);
         Book FindById(long id);
         List<Book> FindAll();
-        Book Update(Book person);
+        Book Update(Book book);
         void Delete(long id);
     }
 }
