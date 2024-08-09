@@ -7,6 +7,7 @@ using RestAPI.Repository.Generic;
 using RestAPI.Services;
 using RestAPI.Services.Implementations;
 using Serilog;
+using System.Net.Http.Headers;
 
 namespace RestAPI
 {
@@ -28,8 +29,18 @@ namespace RestAPI
                 MigrateDatabase(connection);
             }
 
+            builder.Services.AddMvc(options =>
+            {
+                options.RespectBrowserAcceptHeader = true;
+
+                options.FormatterMappings.SetMediaTypeMappingForFormat("xml", "application/xml");
+                options.FormatterMappings.SetMediaTypeMappingForFormat("json", "application/json");
+            }).AddXmlSerializerFormatters();
+
             builder.Services.AddApiVersioning();
 
+            
+            
             builder.Services.AddScoped<IPersonService, PersonService>();
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
