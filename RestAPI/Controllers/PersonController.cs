@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestAPI.Data.VO;
 using RestAPI.Model;
 using RestAPI.Services;
 
@@ -37,7 +38,7 @@ namespace RestAPI.Controllers
         }
 
         [HttpPost()]
-        public IActionResult Post([FromBody] Person person)
+        public IActionResult Post([FromBody] PersonVO person)
         {
             if (person == null)
             {
@@ -48,7 +49,7 @@ namespace RestAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Person person)
+        public IActionResult Put([FromBody] PersonVO person)
         {
             if (person == null) { return BadRequest(); }
 

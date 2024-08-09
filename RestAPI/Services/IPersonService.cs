@@ -1,13 +1,13 @@
-﻿using RestAPI.Model;
+﻿using RestAPI.Data.VO;
 
 namespace RestAPI.Services
 {
     public interface IPersonService
     {
-        Person Create(Person person);
-        Person FindById(long id);
-        List<Person> FindAll();
-        Person Update(Person person);
+        PersonVO Create(PersonVO personVO);
+        PersonVO FindById(long id);
+        List<PersonVO> FindAll();
+        PersonVO Update(PersonVO personVO);
         void Delete(long id);
     }
 }
