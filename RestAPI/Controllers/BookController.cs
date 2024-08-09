@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestAPI.Data.VO;
 using RestAPI.Model;
 using RestAPI.Services;
 using RestAPI.Services.Implementations;
@@ -38,7 +39,7 @@ namespace RestAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Book book)
+        public IActionResult Post([FromBody] BookVO book)
         {
             if(book == null)
             {
@@ -49,7 +50,7 @@ namespace RestAPI.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Book book)
+        public IActionResult Put([FromBody] BookVO book)
         {
             if (book == null) { return BadRequest(); }
 

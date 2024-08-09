@@ -1,4 +1,6 @@
-﻿using RestAPI.Model;
+﻿using RestAPI.Data.Converter;
+using RestAPI.Data.VO;
+using RestAPI.Model;
 using RestAPI.Repository.Generic;
 
 namespace RestAPI.Services.Implementations
@@ -6,29 +8,33 @@ namespace RestAPI.Services.Implementations
     public class BookService : IBookService
     {
         private readonly IRepository<Book> _repository;
+        private readonly BookConverter _converter;
         public BookService(IRepository<Book> repository)
         {
             _repository = repository;
+            _converter = new BookConverter();
         }
 
-        public List<Book> FindAll()
+        public List<BookVO> FindAll()
         {
-            return _repository.FindAll();
+            return _converter.Parse(_repository.FindAll());
         }
 
-        public Book FindById(long id)
+        public BookVO FindById(long id)
         {
-            return _repository.FindById(id);
+            return _converter.Parse(_repository.FindById(id));
         }
 
-        public Book Create(Book book)
+        public BookVO Create(BookVO book)
         {
-            return _repository.Create(book);
+            var bookEntity = _converter.Parse(book);
+            return _converter.Parse(_repository.Create(bookEntity));
         }
 
-        public Book Update(Book book)
+        public BookVO Update(BookVO book)
         {
-            return _repository.Update(book);
+            var bookEntity = _converter.Parse(book);
+            return _converter.Parse(_repository.Update(bookEntity));
         }
 
         public void Delete(long id)
