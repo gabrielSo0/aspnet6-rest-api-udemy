@@ -1,5 +1,7 @@
 using EvolveDb;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using RestAPI.Model.Context;
 using RestAPI.Repository;
@@ -39,7 +41,21 @@ namespace RestAPI
 
             builder.Services.AddApiVersioning();
 
-            
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "REST APIs From Zero to Azure WIth ASPNET Core 6 and docker",
+                        Version = "v1",
+                        Description = "API Restful developed in course 'REST APIs From Zero to Azure WIth ASPNET Core 6 and docker'",
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Gabriel",
+                            Url = new Uri("http://google.com")
+                        }
+                    });
+            });
             
             builder.Services.AddScoped<IPersonService, PersonService>();
             builder.Services.AddScoped<IBookService, BookService>();
@@ -50,6 +66,23 @@ namespace RestAPI
             // Configure the HTTP request pipeline.
 
             app.UseHttpsRedirection();
+
+            app.UseRouting();
+
+            // Generate the json for documentation
+            app.UseSwagger();
+
+            // Generate the html UI page to acess on browser
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                    "REST APIs From Zero to Azure WIth ASPNET Core 6 and docker");
+            });
+
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "swagger");
+
+            app.UseRewriter(option);
 
             app.UseAuthorization();
 
