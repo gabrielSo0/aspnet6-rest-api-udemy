@@ -25,8 +25,14 @@ namespace RestAPI
             // Making swagger endpoints lowercase
             builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
-            // Add services to the container.
+            builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            }));
 
+            // Add services to the container.
             builder.Services.AddControllers();
 
             var connection = builder.Configuration.GetConnectionString("MySQLConnectionString");
@@ -74,6 +80,8 @@ namespace RestAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             // Generate the json for documentation
             app.UseSwagger();
