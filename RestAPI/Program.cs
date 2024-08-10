@@ -18,6 +18,12 @@ namespace RestAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var appName = "REST APIs From Zero to Azure WIth ASPNET Core 6 and docker";
+            var appVersion = "v1";
+            var appDescription = "API Restful developed in course";
+
+            // Making swagger endpoints lowercase
+            builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
             // Add services to the container.
 
@@ -46,9 +52,9 @@ namespace RestAPI
                 c.SwaggerDoc("v1",
                     new OpenApiInfo
                     {
-                        Title = "REST APIs From Zero to Azure WIth ASPNET Core 6 and docker",
-                        Version = "v1",
-                        Description = "API Restful developed in course 'REST APIs From Zero to Azure WIth ASPNET Core 6 and docker'",
+                        Title = appName,
+                        Version = appVersion,
+                        Description = $"{appDescription} {appName}",
                         Contact = new OpenApiContact
                         {
                             Name = "Gabriel",
@@ -76,7 +82,7 @@ namespace RestAPI
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                    "REST APIs From Zero to Azure WIth ASPNET Core 6 and docker");
+                    $"{appName} - {appVersion}");
             });
 
             var option = new RewriteOptions();
