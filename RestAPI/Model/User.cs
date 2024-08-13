@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RestAPI.Model
 {
     [Table("users")]
     public class User
     {
+        [Key]
         [Column("id")]
         public long Id { get; set; }
         [Column("user_name")]
