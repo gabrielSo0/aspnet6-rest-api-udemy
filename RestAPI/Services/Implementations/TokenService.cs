@@ -1,5 +1,8 @@
-﻿using RestAPI.Configurations;
+﻿using Microsoft.IdentityModel.Tokens;
+using RestAPI.Configurations;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace RestAPI.Services.Implementations
 {
@@ -12,7 +15,19 @@ namespace RestAPI.Services.Implementations
         }
         public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
-            throw new NotImplementedException();
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Secret));
+            var signinCredentias = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+
+            var options = new JwtSecurityToken(
+                issuer: _configuration.Issuer,
+                audience: _configuration.Audience,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(_configuration.Minutes),
+                signingCredentials: signinCredentias);
+
+            var stringToken = new JwtSecurityTokenHandler().WriteToken(options);
+
+            return stringToken;
         }
 
         public string GenerateRefreshToken()
