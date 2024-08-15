@@ -22,11 +22,24 @@ namespace RestAPI.Controllers
         [Route("signin")]
         public IActionResult Signin([FromBody] UserVO user)
         {
-            if(user == null) return BadRequest("Invalid Cliente Request");
+            if(user == null) return BadRequest("Invalid Client Request");
 
             var token = _loginService.ReturnUserToken(user);
 
             if(token == null) return Unauthorized();
+
+            return Ok(token);
+        }
+
+        [HttpPost]
+        [Route("refresh")]
+        public IActionResult Refresh([FromBody] TokenVO tokenVO)
+        {
+            if (tokenVO == null) return BadRequest("Invalid Client Request");
+
+            var token = _loginService.ReturnUserToken(tokenVO);
+
+            if (token == null) return BadRequest("Invalid Client Request");
 
             return Ok(token);
         }
