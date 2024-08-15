@@ -49,6 +49,40 @@ namespace RestAPI.Services.Implementations
                 refreshToken);
         }
 
+        public TokenVO ReturnUserToken(TokenVO token)
+        {
+            var accessToken = token.AccessToken;
+            var refreshToken = token.RefreshToken;
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+
+            var userName = principal.Identity.Name;
+
+            var user = _userRepository.ValidateCredentials(userName);
+
+            if (user == null || 
+                user.RefreshToken != refreshToken || 
+                user.RefreshTokenExpiryTime <= DateTime.Now) return null;
+
+            accessToken = _tokenService.GenerateAccessToken(principal.Claims);
+            refreshToken = _tokenService.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_configuration.DaysToExpiry);
+
+            _userRepository.RefreshUserInfo(user);
+
+            DateTime tokenCreatedDate = DateTime.Now;
+            DateTime tokenExpirationDate = tokenCreatedDate.AddMinutes(_configuration.Minutes);
+
+            return new TokenVO(
+                true,
+                tokenCreatedDate.ToString(DATE_FORMAT),
+                tokenExpirationDate.ToString(DATE_FORMAT),
+                accessToken,
+                refreshToken);
+        }
+
         private void UpdateUserInfo(User user, string refreshToken)
         {
             user.RefreshToken = refreshToken;
