@@ -6,5 +6,6 @@ namespace RestAPI.Services
     {
         TokenVO ReturnUserToken(UserVO user);
         TokenVO ReturnUserToken(TokenVO token);
+        bool RevokeToken(string userName);
     }
 }

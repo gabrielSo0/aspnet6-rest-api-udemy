@@ -1,4 +1,5 @@
-﻿using RestAPI.Configurations;
+﻿using Microsoft.EntityFrameworkCore;
+using RestAPI.Configurations;
 using RestAPI.Data.VO;
 using RestAPI.Model;
 using RestAPI.Repository.Interfaces;
@@ -89,6 +90,11 @@ namespace RestAPI.Services.Implementations
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(_configuration.DaysToExpiry);
 
             _userRepository.RefreshUserInfo(user);
+        }
+
+        public bool RevokeToken(string userName)
+        {
+            return _userRepository.RevokeToken(userName);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestAPI.Data.VO;
 using RestAPI.Services;
@@ -42,6 +43,19 @@ namespace RestAPI.Controllers
             if (token == null) return BadRequest("Invalid Client Request");
 
             return Ok(token);
+        }
+
+        [HttpGet]
+        [Route("revoke")]
+        [Authorize("Bearer")]
+        public IActionResult Revoke()
+        {
+            var userName = User.Identity.Name;
+
+            var result = _loginService.RevokeToken(userName);
+
+            if (!result) return BadRequest("Invalid Client Request");
+            return NoContent();
         }
     }
 }
