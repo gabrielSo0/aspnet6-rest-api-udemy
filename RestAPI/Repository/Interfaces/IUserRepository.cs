@@ -6,5 +6,6 @@ namespace RestAPI.Repository.Interfaces
     public interface IUserRepository
     {
         User ValidateCredentials(UserVO user);
+        User RefreshUserInfo(User user);
     }
 }
