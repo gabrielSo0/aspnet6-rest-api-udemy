@@ -1,15 +1,22 @@
 using EvolveDb;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
+using RestAPI.Configurations;
 using RestAPI.Model.Context;
 using RestAPI.Repository;
 using RestAPI.Repository.Generic;
+using RestAPI.Repository.Interfaces;
 using RestAPI.Services;
 using RestAPI.Services.Implementations;
 using Serilog;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace RestAPI
 {
@@ -25,6 +32,40 @@ namespace RestAPI
             // Making swagger endpoints lowercase
             builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
+            // When starting the application, we set those configs on appsettings to our class
+            var tokenConfiguration = new TokenConfiguration();
+            new ConfigureFromConfigurationOptions<TokenConfiguration>(
+                builder.Configuration.GetSection("TokenConfiguration"))
+                .Configure(tokenConfiguration);
+            builder.Services.AddSingleton(tokenConfiguration);
+
+            // Adding the security part for the authentication JWT
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = tokenConfiguration.Issuer,
+                    ValidAudience = tokenConfiguration.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfiguration.Secret)),
+                };
+            });
+
+            builder.Services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser().Build());
+            });
+
+            // Adding cors to our app
             builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
             {
                 builder.AllowAnyOrigin()
@@ -72,6 +113,10 @@ namespace RestAPI
             builder.Services.AddScoped<IPersonService, PersonService>();
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<ILoginService, LoginService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+            builder.Services.AddTransient<ITokenService, TokenService>();
 
             var app = builder.Build();
 
