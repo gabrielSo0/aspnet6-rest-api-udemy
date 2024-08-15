@@ -1,15 +1,14 @@
 ﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RestAPI.Data.VO;
-using RestAPI.Model;
 using RestAPI.Services;
-using RestAPI.Services.Implementations;
 
 namespace RestAPI.Controllers
 {
     [ApiVersion("1")]
     [Route("api/[controller]/v{version:apiVersion}")]
+    [Authorize("Bearer")]
     [ApiController]
     public class BookController : ControllerBase
     {
