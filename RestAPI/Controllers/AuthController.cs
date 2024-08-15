@@ -18,9 +18,9 @@ namespace RestAPI.Controllers
             _loginService = loginService;
         }
 
-        [HttpPost()]
-        [Route("singin")]
-        public IActionResult Signin(UserVO user)
+        [HttpPost]
+        [Route("signin")]
+        public IActionResult Signin([FromBody] UserVO user)
         {
             if(user == null) return BadRequest("Invalid Cliente Request");
 
