@@ -18,14 +18,18 @@ namespace RestAPI.Controllers
             _personService = personService;
         }
 
-        [HttpGet]
+        [HttpGet("{sortDirection}/{pageSize}/{currentPage}")]
         [ProducesResponseType((200), Type = typeof(List<PersonVO>))]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
-        public IActionResult Get()
+        public IActionResult Get(
+            [FromQuery] string name,
+            string sortDirection,
+            int pageSize,
+            int currentPage)
         {
-            return Ok(_personService.FindAll());
+            return Ok(_personService.FindWithPagedSearch(name, sortDirection, pageSize, currentPage));
         }
 
         [HttpGet("{id}")]
