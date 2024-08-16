@@ -8,6 +8,7 @@ namespace RestAPI.Services
         PersonVO FindById(long id);
         List<PersonVO> FindAll();
         PersonVO Update(PersonVO personVO);
+        PersonVO Disable(long id);
         void Delete(long id);
     }
 }

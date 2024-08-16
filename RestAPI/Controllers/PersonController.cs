@@ -79,5 +79,17 @@ namespace RestAPI.Controllers
             _personService.Delete(id);
             return NoContent();
         }
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType((200), Type = typeof(List<PersonVO>))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public IActionResult Patch(long id)
+        {
+            var person = _personService.Disable(id);
+
+            return Ok(person);
+        }
     }
 }

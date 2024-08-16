@@ -4,14 +4,15 @@ using RestAPI.Data.VO;
 using RestAPI.Model;
 using RestAPI.Model.Context;
 using RestAPI.Repository.Generic;
+using RestAPI.Repository.Interfaces;
 
 namespace RestAPI.Services.Implementations
 {
     public class PersonService : IPersonService
     {
-        private readonly IRepository<Person> _repository;
+        private readonly IPersonRepository _repository;
         private readonly PersonConverter _converter;
-        public PersonService(IRepository<Person> repository)
+        public PersonService(IPersonRepository repository)
         {
             _repository = repository;
             _converter = new PersonConverter();
@@ -41,9 +42,16 @@ namespace RestAPI.Services.Implementations
             return _converter.Parse(_repository.Update(personEntity));
         }
 
+        public PersonVO Disable(long id)
+        {
+            var personEntity = _repository.Disable(id);
+
+            return _converter.Parse(personEntity);
+        }
+
         public void Delete(long id)
         {
             _repository.Delete(id);
-        }
+        }    
     }
 }
