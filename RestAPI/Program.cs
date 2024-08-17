@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -109,11 +110,13 @@ namespace RestAPI
                         }
                     });
             });
-            
+
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddScoped<IPersonService, PersonService>();
             builder.Services.AddScoped<IBookService, BookService>();
             builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<ILoginService, LoginService>();
+            builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IPersonRepository, PersonRepository>();
             builder.Services.AddTransient<ITokenService, TokenService>();
