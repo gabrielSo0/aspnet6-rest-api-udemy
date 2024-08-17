@@ -42,5 +42,26 @@ namespace RestAPI.Controllers
 
             return new OkObjectResult(details);
         }
+
+        [HttpGet("downloadFile/{fileName}")]
+        [ProducesResponseType((200), Type = typeof(byte[]))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [Produces("application/octet-stream")]
+        public async Task<IActionResult> GetFileAsync(string fileName)
+        {
+            byte[] buffer = _fileService.GetFile(fileName);
+
+            if(buffer != null)
+            {
+                HttpContext.Response.ContentType = 
+                    $"application/{Path.GetExtension(fileName).Replace(".", "")}";
+
+                HttpContext.Response.Headers.Add("content-length", buffer.Length.ToString());
+                await HttpContext.Response.Body.WriteAsync(buffer, 0, buffer.Length);
+            }
+
+            return new ContentResult();
+        }
     }
 }
