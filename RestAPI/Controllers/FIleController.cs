@@ -30,5 +30,17 @@ namespace RestAPI.Controllers
 
             return new OkObjectResult(detail);
         }
+
+        [HttpPost("uploadMultipleFile")]
+        [ProducesResponseType((200), Type = typeof(FileDetailVO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [Produces("application/json")]
+        public async Task<IActionResult> UploadManyFiles(List<IFormFile> files)
+        {
+            List<FileDetailVO> details = await _fileService.SaveFilesToDisk(files);
+
+            return new OkObjectResult(details);
+        }
     }
 }
